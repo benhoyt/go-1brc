@@ -2,9 +2,11 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"flag"
 	"fmt"
 	"io"
+	"math"
 	"os"
 	"runtime"
 	"runtime/pprof"
@@ -20,8 +22,9 @@ var maxGoroutines int
 func main() {
 	var (
 		cpuProfile = flag.String("cpuprofile", "", "write CPU profile to file")
-		revision   = flag.Int("revision", 1, "revision of solution to run")
+		revision   = flag.Int("revision", len(revisionFuncs), "revision of solution to run")
 		goroutines = flag.Int("goroutines", 0, "num goroutines for parallel solutions (default NumCPU)")
+		benchAll   = flag.Bool("benchall", false, "benchmark all solutions")
 	)
 	flag.Usage = func() {
 		fmt.Fprintf(flag.CommandLine.Output(),
@@ -63,6 +66,15 @@ func main() {
 		defer pprof.StopCPUProfile()
 	}
 
+	if *benchAll {
+		err := benchmarkAll(inputPath)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "error: %v\n", err)
+			os.Exit(1)
+		}
+		return
+	}
+
 	start := time.Now()
 	output := bufio.NewWriter(os.Stdout)
 
@@ -77,4 +89,43 @@ func main() {
 	elapsed := time.Since(start)
 	fmt.Fprintf(os.Stderr, "Processed %.1fMB in %s\n",
 		float64(size)/(1024*1024), elapsed)
+}
+
+func benchmarkAll(inputPath string) error {
+	const tries = 5
+
+	var buf bytes.Buffer
+	err := r1(inputPath, &buf)
+	if err != nil {
+		return err
+	}
+	expected := buf.String()
+
+	var r1Best time.Duration
+
+	for i, rf := range revisionFuncs {
+		fmt.Fprintf(os.Stderr, "r%d: ", i+1)
+		bestTime := time.Duration(math.MaxInt64)
+		for try := 0; try < tries; try++ {
+			var output bytes.Buffer
+			start := time.Now()
+			err := rf(inputPath, &output)
+			if err != nil {
+				return err
+			}
+			elapsed := time.Since(start)
+			fmt.Fprintf(os.Stderr, "%v ", elapsed)
+			bestTime = min(bestTime, elapsed)
+			if i == 0 {
+				r1Best = bestTime
+			}
+
+			if output.String() != expected {
+				return fmt.Errorf("r%d didn't give correct result", i+1)
+			}
+		}
+		fmt.Fprintf(os.Stderr, "- best: %v (%.2fx as fast as r1)\n",
+			bestTime, float64(r1Best)/float64(bestTime))
+	}
+	return nil
 }
