@@ -52,7 +52,6 @@ func r7(inputPath string, output io.Writer) error {
 
 		for {
 			const (
-				// TODO: try FNV-1a?
 				// FNV-1 64-bit constants from hash/fnv.
 				offset64 = 14695981039346656037
 				prime64  = 1099511628211
@@ -68,8 +67,8 @@ func r7(inputPath string, output io.Writer) error {
 					after = chunk[i+1:]
 					break
 				}
+				hash ^= uint64(c) // FNV-1a is XOR then *
 				hash *= prime64
-				hash ^= uint64(c)
 			}
 			if i == len(chunk) {
 				break

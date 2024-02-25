@@ -25,7 +25,6 @@ func r8(inputPath string, output io.Writer) error {
 	if err != nil {
 		return err
 	}
-	fmt.Fprintf(os.Stderr, "Processing %d parts with %d goroutines\n", len(parts), len(parts))
 
 	resultsCh := make(chan map[string]r8Stats)
 	for _, part := range parts {

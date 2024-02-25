@@ -22,7 +22,6 @@ func r9(inputPath string, output io.Writer) error {
 	if err != nil {
 		return err
 	}
-	fmt.Fprintf(os.Stderr, "Processing %d parts with %d goroutines\n", len(parts), len(parts))
 
 	resultsCh := make(chan map[string]*r9Stats)
 	for _, part := range parts {
@@ -119,8 +118,8 @@ func r9ProcessPart(inputPath string, fileOffset, fileSize int64, resultsCh chan 
 					after = chunk[i+1:]
 					break
 				}
+				hash ^= uint64(c) // FNV-1a is XOR then *
 				hash *= prime64
-				hash ^= uint64(c)
 			}
 			if i == len(chunk) {
 				break
