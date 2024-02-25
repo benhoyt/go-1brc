@@ -1,0 +1,5 @@
+measurements*.txt
+measurements*.out
+cpu.prof
+default.pgo
+go-1brc
