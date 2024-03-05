@@ -3,10 +3,14 @@ BEGIN {
 }
 
 {
-	mins[$1] = $2 < mins[$1] ? $2 : mins[$1]
-	maxs[$1] = $2 > maxs[$1] ? $2 : maxs[$1]
+	c = ++counts[$1]
+	if (c==1) {  # new entry
+		mins[$1] = maxs[$1] = $2
+	} else {
+		mins[$1] = $2 < mins[$1] ? $2 : mins[$1]
+		maxs[$1] = $2 > maxs[$1] ? $2 : maxs[$1]
+	}
 	sums[$1] += $2
-	counts[$1]++
 }
 
 END {
