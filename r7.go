@@ -28,8 +28,9 @@ func r7(inputPath string, output io.Writer) error {
 		key  []byte
 		stat *stats
 	}
-	items := make([]item, 100000) // hash buckets, linearly probed
-	size := 0                     // number of active items in items slice
+	const numBuckets = 1 << 17        // number of hash buckets (power of 2)
+	items := make([]item, numBuckets) // hash buckets, linearly probed
+	size := 0                         // number of active items in items slice
 
 	buf := make([]byte, 1024*1024)
 	readStart := 0
@@ -94,7 +95,7 @@ func r7(inputPath string, output io.Writer) error {
 			}
 			chunk = after[index:]
 
-			hashIndex := int(hash & uint64(len(items)-1))
+			hashIndex := int(hash & uint64(numBuckets-1))
 			for {
 				if items[hashIndex].key == nil {
 					// Found empty slot, add new item (copying key).
@@ -110,7 +111,7 @@ func r7(inputPath string, output io.Writer) error {
 						},
 					}
 					size++
-					if size > len(items)/2 {
+					if size > numBuckets/2 {
 						panic("too many items in hash table")
 					}
 					break
@@ -126,7 +127,7 @@ func r7(inputPath string, output io.Writer) error {
 				}
 				// Slot already holds another key, try next slot (linear probe).
 				hashIndex++
-				if hashIndex >= len(items) {
+				if hashIndex >= numBuckets {
 					hashIndex = 0
 				}
 			}
