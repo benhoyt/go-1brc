@@ -1,8 +1,19 @@
 // r10: all the previous optimizations plus faster semicolon finding and
 // hashing
 //
-// 24.8x faster than r1
-// 47.62ms for 10M rows on Menno's laptop (which is slower than Ben's)
+// Translated from Java by Menno Finlay-Smits Ideas with ideas taken from
+// this fast Java solution:
+//
+// https://github.com/gunnarmorling/1brc/blob/main/src/main/java/dev/morling/onebrc/CalculateAverage_mtopolnik.java
+//
+// On my (Ben's) laptop I get these initial results:
+//
+// $ ./go-1brc -revision=1 ../1brc/data/measurements.txt >out-r1
+// Processed 13156.2MB in 1m39.507011009s
+// $ ./go-1brc -revision=9 ../1brc/data/measurements.txt >out-r9
+// Processed 13156.2MB in 2.893693843s  # 34.4x as fast as the r1 above
+// $ ./go-1brc -revision=10 ../1brc/data/measurements.txt >out-r10
+// Processed 13156.2MB in 2.497241029s  # 39.8x as fast as the r1 above
 
 package main
 
