@@ -139,11 +139,13 @@ func splitFile(inputPath string, numParts int) ([]part, error) {
 
 	parts := make([]part, 0, numParts)
 	offset := int64(0)
-	for offset < size {
-		seekOffset := max(offset+splitSize-maxLineLength, 0)
-		if seekOffset > size {
+	for i := 1; i <= numParts; i++ {
+		if i == numParts {
+			parts = append(parts, part{offset, size - offset})
 			break
 		}
+
+		seekOffset := max(offset+splitSize-maxLineLength, 0)
 		_, err := f.Seek(seekOffset, io.SeekStart)
 		if err != nil {
 			return nil, err
