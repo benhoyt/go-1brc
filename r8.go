@@ -139,9 +139,11 @@ func splitFile(inputPath string, numParts int) ([]part, error) {
 
 	parts := make([]part, 0, numParts)
 	offset := int64(0)
-	for i := 1; i <= numParts; i++ {
-		if i == numParts {
-			parts = append(parts, part{offset, size - offset})
+	for i := 0; i < numParts; i++ {
+		if i == numParts-1 {
+			if offset < size {
+				parts = append(parts, part{offset, size - offset})
+			}
 			break
 		}
 

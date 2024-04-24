@@ -1,0 +1,35 @@
+Belas;48.7
+Hulin;-95.1
+Neuwied;50.2
+Bellinzona;10.3
+Volgorechensk;-52.6
+Narón;15.0
+Sibilia;-63.3
+Bedum;9.0
+Qyzylorda;-10.6
+Muzambinho;67.7
+Ząbki;-26.8
+Madnūr;-37.5
+Kornwestheim;13.4
+Bom Jesus dos Perdões;55.0
+Benjamin Constant;26.5
+Tiaong;-98.7
+North Whitehall;3.7
+La Flèche;74.7
+Mezőkövesd;-75.3
+Mahazony;-38.1
+Kawachinagano;-76.4
+Lamarão;59.9
+Neiva;-81.8
+White City;28.7
+Detva;73.1
+Toffo;25.8
+Kamenka;-40.8
+Oulad Friha;94.2
+Jishi;8.6
+Manzanares el Real;61.2
+Tom Price;26.2
+Lusanga;86.8
+Ban Bo Luang;-47.6
+Ansonia;1.1
+Scherpenzeel;-79.6
